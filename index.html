@@ -58,6 +58,25 @@
         });
       });
     </script>
+
+<div style="display: flex; align-items: center; margin-top: 5px;">
+  <img src="dollar.png" alt="Dollar Icon" style="width: 15px; height: 15px;">
+  <div id="usdeur" style="display: inline-block; margin-left: 5px;"></div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    setInterval(function() {
+      $.ajax({
+        url: "https://api.exchangerate-api.com/v4/latest/USD",
+        success: function(result) {
+          var rate = parseFloat(result.rates.EUR / result.rates.USD).toFixed(4);
+          $("#usdeur").text(rate + " USD/EUR");
+        }
+      });
+    }, 1000);
+  });
+</script>
   </body>
 </html>
 

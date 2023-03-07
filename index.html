@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Crypto price feeds</title>
+    <style>
+      h1 {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="">Crypto price feeds</h1>
+    <img src="btclogo.png" alt="BTC Logo" style="width: 15px; height: 15px;">
+    <div id="btcprice" style="display: inline-block;"></div>
+    <div id="btc24change" style="display: inline-block;"></div>
+    <div id="btcema" style="display: inline-block;"></div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        setInterval(function() {
+          $.ajax({
+            url: "https://api.binance.com/api/v3/ticker/price",
+            data: {symbol: "BTCUSDT"},
+            success: function(result) {
+              $("#btcprice").text("BTC/USD: " + parseFloat(result.price).toFixed(4));
+            }
+          });
+        }, 1000);
+
+        setInterval(function() {
+          $.ajax({
+            url: "https://api.binance.com/api/v3/ticker/24hr",
+            data: {symbol: "BTCUSDT"},
+            success: function(result) {
+              var price = parseFloat(result.lastPrice).toFixed(4);
+              var change_percent = parseFloat(result.priceChangePercent).toFixed(2);
+              var change_color = change_percent > 0 ? "green" : "red";
+              $("#btc24change").html("| 24hr change: <span style='color: " + change_color + ";'>" + change_percent + "%</span>");
+            }
+          });
+        }, 1000);
+
+        $.ajax({
+          url: "https://api.binance.com/api/v3/klines",
+          data: {
+            symbol: "BTCUSDT",
+            interval: "1d",
+            limit: 200
+          },
+          success: function(result) {
+            var sum = 0;
+            for (var i = 0; i < result.length; i++) {
+              sum += parseFloat(result[i][4]);
+            }
+            var ema = sum / 200;
+            $("#btcema").text("| 200-day EMA: " + ema.toFixed(2));
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
+

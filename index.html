@@ -70,7 +70,7 @@
       $.ajax({
         url: "https://api.exchangerate-api.com/v4/latest/USD",
         success: function(result) {
-          var rate = parseFloat(result.rates.EUR / result.rates.USD).toFixed(4);
+          var rate = parseFloat(result.rates.USD / result.rates.EUR).toFixed(4);
           $("#usdeur").text(rate + " USD/EUR");
         }
       });
